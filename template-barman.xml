@@ -1,0 +1,956 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zabbix_export>
+    <version>5.0</version>
+    <date>2021-02-22T17:40:27Z</date>
+    <groups>
+        <group>
+            <name>Templates/Databases</name>
+        </group>
+    </groups>
+    <templates>
+        <template>
+            <template>Template DB PostgreSQL Barman</template>
+            <name>Template DB PostgreSQL Barman</name>
+            <groups>
+                <group>
+                    <name>Templates/Databases</name>
+                </group>
+            </groups>
+            <applications>
+                <application>
+                    <name>PostgreSQL Barman</name>
+                </application>
+            </applications>
+            <items>
+                <item>
+                    <name>Barman Check</name>
+                    <key>barman.check</key>
+                    <delay>5m</delay>
+                    <history>7d</history>
+                    <trends>0</trends>
+                    <value_type>TEXT</value_type>
+                    <description>This is the master item for this template. Both the discovery itself and all items discovered depent on this item.&#13;
+&#13;
+It performs a check of all configured PostgreSQL Barman backups using this UserParameter:&#13;
+UserParameter=barman.check,/usr/bin/sudo -u barman /usr/bin/barman -f json check all</description>
+                    <applications>
+                        <application>
+                            <name>PostgreSQL Barman</name>
+                        </application>
+                    </applications>
+                </item>
+            </items>
+            <discovery_rules>
+                <discovery_rule>
+                    <name>Barman Backup Discovery</name>
+                    <type>DEPENDENT</type>
+                    <key>barman.discovery</key>
+                    <delay>0</delay>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>Barman Backup  {#BARMAN.BACKUP}: Archiver Errors</name>
+                            <type>DEPENDENT</type>
+                            <key>barman.archiver_errors.[&quot;{#BARMAN.BACKUP}&quot;]</key>
+                            <delay>0</delay>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>PostgreSQL Barman Backup {#BARMAN.BACKUP}</name>
+                                </application_prototype>
+                            </application_prototypes>
+                            <valuemap>
+                                <name>Alarm state</name>
+                            </valuemap>
+                            <preprocessing>
+                                <step>
+                                    <type>JSONPATH</type>
+                                    <params>$.{#BARMAN.BACKUP}.archiver_errors.status</params>
+                                </step>
+                                <step>
+                                    <type>STR_REPLACE</type>
+                                    <params>OK
+0</params>
+                                </step>
+                                <step>
+                                    <type>STR_REPLACE</type>
+                                    <params>FAILED
+1</params>
+                                </step>
+                            </preprocessing>
+                            <master_item>
+                                <key>barman.check</key>
+                            </master_item>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{last()}=1</expression>
+                                    <name>Barman Backup {#BARMAN.BACKUP}: Archiver Errors</name>
+                                    <priority>WARNING</priority>
+                                    <description>The Barman archiver experienced some errors. Check the barman logfile and the error directory for this archiver and resolve the issue there.</description>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Barman Backup  {#BARMAN.BACKUP}: Archive Command</name>
+                            <type>DEPENDENT</type>
+                            <key>barman.archive_command.[&quot;{#BARMAN.BACKUP}&quot;]</key>
+                            <delay>0</delay>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>PostgreSQL Barman Backup {#BARMAN.BACKUP}</name>
+                                </application_prototype>
+                            </application_prototypes>
+                            <valuemap>
+                                <name>Alarm state</name>
+                            </valuemap>
+                            <preprocessing>
+                                <step>
+                                    <type>JSONPATH</type>
+                                    <params>$.{#BARMAN.BACKUP}.archive_command.status</params>
+                                </step>
+                                <step>
+                                    <type>STR_REPLACE</type>
+                                    <params>OK
+0</params>
+                                </step>
+                                <step>
+                                    <type>STR_REPLACE</type>
+                                    <params>FAILED
+1</params>
+                                </step>
+                            </preprocessing>
+                            <master_item>
+                                <key>barman.check</key>
+                            </master_item>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{last()}=1</expression>
+                                    <name>Barman Backup {#BARMAN.BACKUP}: Archive Command failed</name>
+                                    <priority>WARNING</priority>
+                                    <description>Check why the archive command failed and resolve the issue. Correct archiving is important to restore operation on failed PostgreSQL nodes</description>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Barman Backup  {#BARMAN.BACKUP}: Archive Mode</name>
+                            <type>DEPENDENT</type>
+                            <key>barman.archive_mode.[&quot;{#BARMAN.BACKUP}&quot;]</key>
+                            <delay>0</delay>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>PostgreSQL Barman Backup {#BARMAN.BACKUP}</name>
+                                </application_prototype>
+                            </application_prototypes>
+                            <valuemap>
+                                <name>Alarm state</name>
+                            </valuemap>
+                            <preprocessing>
+                                <step>
+                                    <type>JSONPATH</type>
+                                    <params>$.{#BARMAN.BACKUP}.archive_mode.status</params>
+                                </step>
+                                <step>
+                                    <type>STR_REPLACE</type>
+                                    <params>OK
+0</params>
+                                </step>
+                                <step>
+                                    <type>STR_REPLACE</type>
+                                    <params>FAILED
+1</params>
+                                </step>
+                            </preprocessing>
+                            <master_item>
+                                <key>barman.check</key>
+                            </master_item>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{last()}=1</expression>
+                                    <name>Barman Backup {#BARMAN.BACKUP}: Archive Mode is not ok</name>
+                                    <priority>INFO</priority>
+                                    <description>This is most likely a barman configuration problem that has to be resolved to allow correct archiving</description>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Barman Backup  {#BARMAN.BACKUP}: Backup Maximum Age</name>
+                            <type>DEPENDENT</type>
+                            <key>barman.backup_maximum_age.[&quot;{#BARMAN.BACKUP}&quot;]</key>
+                            <delay>0</delay>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>PostgreSQL Barman Backup {#BARMAN.BACKUP}</name>
+                                </application_prototype>
+                            </application_prototypes>
+                            <valuemap>
+                                <name>Alarm state</name>
+                            </valuemap>
+                            <preprocessing>
+                                <step>
+                                    <type>JSONPATH</type>
+                                    <params>$.{#BARMAN.BACKUP}.backup_maximum_age.status</params>
+                                </step>
+                                <step>
+                                    <type>STR_REPLACE</type>
+                                    <params>OK
+0</params>
+                                </step>
+                                <step>
+                                    <type>STR_REPLACE</type>
+                                    <params>FAILED
+1</params>
+                                </step>
+                            </preprocessing>
+                            <master_item>
+                                <key>barman.check</key>
+                            </master_item>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{last()}=1</expression>
+                                    <name>Barman Backup {#BARMAN.BACKUP}: Backup maximum age exceeded</name>
+                                    <priority>AVERAGE</priority>
+                                    <description>The youngest barman base backup is older that the configured threshold. This means that there is a problem either with the configuration or the execution of base backups.</description>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Barman Backup  {#BARMAN.BACKUP}: Compression Settings</name>
+                            <type>DEPENDENT</type>
+                            <key>barman.compression_settings.[&quot;{#BARMAN.BACKUP}&quot;]</key>
+                            <delay>0</delay>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>PostgreSQL Barman Backup {#BARMAN.BACKUP}</name>
+                                </application_prototype>
+                            </application_prototypes>
+                            <valuemap>
+                                <name>Alarm state</name>
+                            </valuemap>
+                            <preprocessing>
+                                <step>
+                                    <type>JSONPATH</type>
+                                    <params>$.{#BARMAN.BACKUP}.compression_settings.status</params>
+                                </step>
+                                <step>
+                                    <type>STR_REPLACE</type>
+                                    <params>OK
+0</params>
+                                </step>
+                                <step>
+                                    <type>STR_REPLACE</type>
+                                    <params>FAILED
+1</params>
+                                </step>
+                            </preprocessing>
+                            <master_item>
+                                <key>barman.check</key>
+                            </master_item>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{last()}=1</expression>
+                                    <name>Barman Backup {#BARMAN.BACKUP}: Compression Settings</name>
+                                    <priority>INFO</priority>
+                                    <description>The compression settings for base backups are not ok - verify and check your configuration</description>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Barman Backup  {#BARMAN.BACKUP}: Continuous Archiving</name>
+                            <type>DEPENDENT</type>
+                            <key>barman.continuous_archiving.[&quot;{#BARMAN.BACKUP}&quot;]</key>
+                            <delay>0</delay>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>PostgreSQL Barman Backup {#BARMAN.BACKUP}</name>
+                                </application_prototype>
+                            </application_prototypes>
+                            <valuemap>
+                                <name>Alarm state</name>
+                            </valuemap>
+                            <preprocessing>
+                                <step>
+                                    <type>JSONPATH</type>
+                                    <params>$.{#BARMAN.BACKUP}.continuous_archiving.status</params>
+                                </step>
+                                <step>
+                                    <type>STR_REPLACE</type>
+                                    <params>OK
+0</params>
+                                </step>
+                                <step>
+                                    <type>STR_REPLACE</type>
+                                    <params>FAILED
+1</params>
+                                </step>
+                            </preprocessing>
+                            <master_item>
+                                <key>barman.check</key>
+                            </master_item>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Barman Backup  {#BARMAN.BACKUP}: Directories</name>
+                            <type>DEPENDENT</type>
+                            <key>barman.directories.[&quot;{#BARMAN.BACKUP}&quot;]</key>
+                            <delay>0</delay>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>PostgreSQL Barman Backup {#BARMAN.BACKUP}</name>
+                                </application_prototype>
+                            </application_prototypes>
+                            <valuemap>
+                                <name>Alarm state</name>
+                            </valuemap>
+                            <preprocessing>
+                                <step>
+                                    <type>JSONPATH</type>
+                                    <params>$.{#BARMAN.BACKUP}.directories.status</params>
+                                </step>
+                                <step>
+                                    <type>STR_REPLACE</type>
+                                    <params>OK
+0</params>
+                                </step>
+                                <step>
+                                    <type>STR_REPLACE</type>
+                                    <params>FAILED
+1</params>
+                                </step>
+                            </preprocessing>
+                            <master_item>
+                                <key>barman.check</key>
+                            </master_item>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{last()}=1</expression>
+                                    <name>Barman Backup {#BARMAN.BACKUP}: Directories misconfigured</name>
+                                    <priority>INFO</priority>
+                                    <description>The barman directories are not ok. Check log file, configuration and flie system layout.</description>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Barman Backup  {#BARMAN.BACKUP}: Failed Backups</name>
+                            <type>DEPENDENT</type>
+                            <key>barman.failed_backups.[&quot;{#BARMAN.BACKUP}&quot;]</key>
+                            <delay>0</delay>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>PostgreSQL Barman Backup {#BARMAN.BACKUP}</name>
+                                </application_prototype>
+                            </application_prototypes>
+                            <valuemap>
+                                <name>Alarm state</name>
+                            </valuemap>
+                            <preprocessing>
+                                <step>
+                                    <type>JSONPATH</type>
+                                    <params>$.{#BARMAN.BACKUP}.failed_backups.status</params>
+                                </step>
+                                <step>
+                                    <type>STR_REPLACE</type>
+                                    <params>OK
+0</params>
+                                </step>
+                                <step>
+                                    <type>STR_REPLACE</type>
+                                    <params>FAILED
+1</params>
+                                </step>
+                            </preprocessing>
+                            <master_item>
+                                <key>barman.check</key>
+                            </master_item>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Barman Backup  {#BARMAN.BACKUP}: Minimum Redundancy Requirements</name>
+                            <type>DEPENDENT</type>
+                            <key>barman.minimum_redundancy_requirements.[&quot;{#BARMAN.BACKUP}&quot;]</key>
+                            <delay>0</delay>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>PostgreSQL Barman Backup {#BARMAN.BACKUP}</name>
+                                </application_prototype>
+                            </application_prototypes>
+                            <valuemap>
+                                <name>Alarm state</name>
+                            </valuemap>
+                            <preprocessing>
+                                <step>
+                                    <type>JSONPATH</type>
+                                    <params>$.{#BARMAN.BACKUP}.minimum_redundancy_requirements.status</params>
+                                </step>
+                                <step>
+                                    <type>STR_REPLACE</type>
+                                    <params>OK
+0</params>
+                                </step>
+                                <step>
+                                    <type>STR_REPLACE</type>
+                                    <params>FAILED
+1</params>
+                                </step>
+                            </preprocessing>
+                            <master_item>
+                                <key>barman.check</key>
+                            </master_item>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{last()}=1</expression>
+                                    <name>Barman Backup {#BARMAN.BACKUP}: Minimum Redundancy not fulfilled</name>
+                                    <priority>AVERAGE</priority>
+                                    <description>There are less base backups in storage than configured. Check for backup issues and misconfigurations (especially cron jobs for backup creation and retention)</description>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Barman Backup  {#BARMAN.BACKUP}: pg_basebackup</name>
+                            <type>DEPENDENT</type>
+                            <key>barman.pg_basebackup.[&quot;{#BARMAN.BACKUP}&quot;]</key>
+                            <delay>0</delay>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>PostgreSQL Barman Backup {#BARMAN.BACKUP}</name>
+                                </application_prototype>
+                            </application_prototypes>
+                            <valuemap>
+                                <name>Alarm state</name>
+                            </valuemap>
+                            <preprocessing>
+                                <step>
+                                    <type>JSONPATH</type>
+                                    <params>$.{#BARMAN.BACKUP}.pg_basebackup.status</params>
+                                </step>
+                                <step>
+                                    <type>STR_REPLACE</type>
+                                    <params>OK
+0</params>
+                                </step>
+                                <step>
+                                    <type>STR_REPLACE</type>
+                                    <params>FAILED
+1</params>
+                                </step>
+                            </preprocessing>
+                            <master_item>
+                                <key>barman.check</key>
+                            </master_item>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{last()}=1</expression>
+                                    <name>Barman Backup {#BARMAN.BACKUP}: pg_basebackup error</name>
+                                    <priority>INFO</priority>
+                                    <description>This usually means that barman cannot find pg_basebackup on the PostgreSQL server node, resolve either there or in barman configuration</description>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Barman Backup  {#BARMAN.BACKUP}: pg_basebackup compatible</name>
+                            <type>DEPENDENT</type>
+                            <key>barman.pg_basebackup_compatible.[&quot;{#BARMAN.BACKUP}&quot;]</key>
+                            <delay>0</delay>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>PostgreSQL Barman Backup {#BARMAN.BACKUP}</name>
+                                </application_prototype>
+                            </application_prototypes>
+                            <valuemap>
+                                <name>Alarm state</name>
+                            </valuemap>
+                            <preprocessing>
+                                <step>
+                                    <type>JSONPATH</type>
+                                    <params>$.{#BARMAN.BACKUP}.pg_basebackup_compatible.status</params>
+                                </step>
+                                <step>
+                                    <type>STR_REPLACE</type>
+                                    <params>OK
+0</params>
+                                </step>
+                                <step>
+                                    <type>STR_REPLACE</type>
+                                    <params>FAILED
+1</params>
+                                </step>
+                            </preprocessing>
+                            <master_item>
+                                <key>barman.check</key>
+                            </master_item>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{last()}=1</expression>
+                                    <name>Barman Backup {#BARMAN.BACKUP}: pg_basebackup incompatible</name>
+                                    <priority>INFO</priority>
+                                    <description>The version of pg_basebackup on a database server node is not compatible with this barman version</description>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Barman Backup  {#BARMAN.BACKUP}: pg_basebackup supports tablespace mapping</name>
+                            <type>DEPENDENT</type>
+                            <key>barman.pg_basebackup_supports_tablespaces_mapping.[&quot;{#BARMAN.BACKUP}&quot;]</key>
+                            <delay>0</delay>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>PostgreSQL Barman Backup {#BARMAN.BACKUP}</name>
+                                </application_prototype>
+                            </application_prototypes>
+                            <valuemap>
+                                <name>Alarm state</name>
+                            </valuemap>
+                            <preprocessing>
+                                <step>
+                                    <type>JSONPATH</type>
+                                    <params>$.{#BARMAN.BACKUP}.pg_basebackup_supports_tablespaces_mapping.status</params>
+                                </step>
+                                <step>
+                                    <type>STR_REPLACE</type>
+                                    <params>OK
+0</params>
+                                </step>
+                                <step>
+                                    <type>STR_REPLACE</type>
+                                    <params>FAILED
+1</params>
+                                </step>
+                            </preprocessing>
+                            <master_item>
+                                <key>barman.check</key>
+                            </master_item>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{last()}=1</expression>
+                                    <name>Barman Backup {#BARMAN.BACKUP}: tablespace mapping not supported</name>
+                                    <priority>INFO</priority>
+                                    <description>pg_basebackup does not support tablespace mapping in the available version, but it should</description>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Barman Backup  {#BARMAN.BACKUP}: pg_receivexlog</name>
+                            <type>DEPENDENT</type>
+                            <key>barman.pg_receivexlog.[&quot;{#BARMAN.BACKUP}&quot;]</key>
+                            <delay>0</delay>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>PostgreSQL Barman Backup {#BARMAN.BACKUP}</name>
+                                </application_prototype>
+                            </application_prototypes>
+                            <valuemap>
+                                <name>Alarm state</name>
+                            </valuemap>
+                            <preprocessing>
+                                <step>
+                                    <type>JSONPATH</type>
+                                    <params>$.{#BARMAN.BACKUP}.pg_receivexlog.status</params>
+                                </step>
+                                <step>
+                                    <type>STR_REPLACE</type>
+                                    <params>OK
+0</params>
+                                </step>
+                                <step>
+                                    <type>STR_REPLACE</type>
+                                    <params>FAILED
+1</params>
+                                </step>
+                            </preprocessing>
+                            <master_item>
+                                <key>barman.check</key>
+                            </master_item>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{last()}=1</expression>
+                                    <name>Barman Backup {#BARMAN.BACKUP}: pg_receivexlog error</name>
+                                    <priority>INFO</priority>
+                                    <description>Barman cannot access pg_receivexlog, check its installation and barman configuration</description>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Barman Backup  {#BARMAN.BACKUP}: pg_receivexlog compatible</name>
+                            <type>DEPENDENT</type>
+                            <key>barman.pg_receivexlog_compatible.[&quot;{#BARMAN.BACKUP}&quot;]</key>
+                            <delay>0</delay>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>PostgreSQL Barman Backup {#BARMAN.BACKUP}</name>
+                                </application_prototype>
+                            </application_prototypes>
+                            <valuemap>
+                                <name>Alarm state</name>
+                            </valuemap>
+                            <preprocessing>
+                                <step>
+                                    <type>JSONPATH</type>
+                                    <params>$.{#BARMAN.BACKUP}.pg_receivexlog_compatible.status</params>
+                                </step>
+                                <step>
+                                    <type>STR_REPLACE</type>
+                                    <params>OK
+0</params>
+                                </step>
+                                <step>
+                                    <type>STR_REPLACE</type>
+                                    <params>FAILED
+1</params>
+                                </step>
+                            </preprocessing>
+                            <master_item>
+                                <key>barman.check</key>
+                            </master_item>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{last()}=1</expression>
+                                    <name>Barman Backup {#BARMAN.BACKUP}: pg_receivexlog incompatible</name>
+                                    <priority>INFO</priority>
+                                    <description>pg_receivexlog is not compatible with the used barman version</description>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Barman Backup  {#BARMAN.BACKUP}:postgresql</name>
+                            <type>DEPENDENT</type>
+                            <key>barman.postgresql.[&quot;{#BARMAN.BACKUP}&quot;]</key>
+                            <delay>0</delay>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>PostgreSQL Barman Backup {#BARMAN.BACKUP}</name>
+                                </application_prototype>
+                            </application_prototypes>
+                            <valuemap>
+                                <name>Alarm state</name>
+                            </valuemap>
+                            <preprocessing>
+                                <step>
+                                    <type>JSONPATH</type>
+                                    <params>$.{#BARMAN.BACKUP}.postgresql.status</params>
+                                </step>
+                                <step>
+                                    <type>STR_REPLACE</type>
+                                    <params>OK
+0</params>
+                                </step>
+                                <step>
+                                    <type>STR_REPLACE</type>
+                                    <params>FAILED
+1</params>
+                                </step>
+                            </preprocessing>
+                            <master_item>
+                                <key>barman.check</key>
+                            </master_item>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{last()}=1</expression>
+                                    <name>Barman Backup {#BARMAN.BACKUP}: PostgreSQL Error</name>
+                                    <priority>WARNING</priority>
+                                    <description>Barman can not access PostgreSQL correctly. Check if it is running and if barman has the necessary rights to it.</description>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Barman Backup  {#BARMAN.BACKUP}: postgresql streaming</name>
+                            <type>DEPENDENT</type>
+                            <key>barman.postgresql_streaming.[&quot;{#BARMAN.BACKUP}&quot;]</key>
+                            <delay>0</delay>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>PostgreSQL Barman Backup {#BARMAN.BACKUP}</name>
+                                </application_prototype>
+                            </application_prototypes>
+                            <valuemap>
+                                <name>Alarm state</name>
+                            </valuemap>
+                            <preprocessing>
+                                <step>
+                                    <type>JSONPATH</type>
+                                    <params>$.{#BARMAN.BACKUP}.postgresql_streaming.status</params>
+                                </step>
+                                <step>
+                                    <type>STR_REPLACE</type>
+                                    <params>OK
+0</params>
+                                </step>
+                                <step>
+                                    <type>STR_REPLACE</type>
+                                    <params>FAILED
+1</params>
+                                </step>
+                            </preprocessing>
+                            <master_item>
+                                <key>barman.check</key>
+                            </master_item>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{last()}=1</expression>
+                                    <name>Barman Backup {#BARMAN.BACKUP}: PostgreSQL Streaming Error</name>
+                                    <priority>WARNING</priority>
+                                    <description>Barman can not stream correctly from PostgreSQL. Check the logfile for more details</description>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Barman Backup  {#BARMAN.BACKUP}: Receive WAL Running</name>
+                            <type>DEPENDENT</type>
+                            <key>barman.receive_wal_running.[&quot;{#BARMAN.BACKUP}&quot;]</key>
+                            <delay>0</delay>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>PostgreSQL Barman Backup {#BARMAN.BACKUP}</name>
+                                </application_prototype>
+                            </application_prototypes>
+                            <valuemap>
+                                <name>Alarm state</name>
+                            </valuemap>
+                            <preprocessing>
+                                <step>
+                                    <type>JSONPATH</type>
+                                    <params>$.{#BARMAN.BACKUP}.receive_wal_running.status</params>
+                                </step>
+                                <step>
+                                    <type>STR_REPLACE</type>
+                                    <params>OK
+0</params>
+                                </step>
+                                <step>
+                                    <type>STR_REPLACE</type>
+                                    <params>FAILED
+1</params>
+                                </step>
+                            </preprocessing>
+                            <master_item>
+                                <key>barman.check</key>
+                            </master_item>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{last()}=1</expression>
+                                    <name>Barman Backup {#BARMAN.BACKUP}: Receive WAL not running</name>
+                                    <priority>AVERAGE</priority>
+                                    <description>Barman is currently not receiving WALs - a point-in-time-recovery is impossible without them.</description>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Barman Backup  {#BARMAN.BACKUP}: Replication Slot</name>
+                            <type>DEPENDENT</type>
+                            <key>barman.replication_slot.[&quot;{#BARMAN.BACKUP}&quot;]</key>
+                            <delay>0</delay>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>PostgreSQL Barman Backup {#BARMAN.BACKUP}</name>
+                                </application_prototype>
+                            </application_prototypes>
+                            <valuemap>
+                                <name>Alarm state</name>
+                            </valuemap>
+                            <preprocessing>
+                                <step>
+                                    <type>JSONPATH</type>
+                                    <params>$.{#BARMAN.BACKUP}.replication_slot.status</params>
+                                </step>
+                                <step>
+                                    <type>STR_REPLACE</type>
+                                    <params>OK
+0</params>
+                                </step>
+                                <step>
+                                    <type>STR_REPLACE</type>
+                                    <params>FAILED
+1</params>
+                                </step>
+                            </preprocessing>
+                            <master_item>
+                                <key>barman.check</key>
+                            </master_item>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Barman Backup  {#BARMAN.BACKUP}: Retention Policy Settings</name>
+                            <type>DEPENDENT</type>
+                            <key>barman.retention_policy_settings.[&quot;{#BARMAN.BACKUP}&quot;]</key>
+                            <delay>0</delay>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>PostgreSQL Barman Backup {#BARMAN.BACKUP}</name>
+                                </application_prototype>
+                            </application_prototypes>
+                            <valuemap>
+                                <name>Alarm state</name>
+                            </valuemap>
+                            <preprocessing>
+                                <step>
+                                    <type>JSONPATH</type>
+                                    <params>$.{#BARMAN.BACKUP}.retention_policy_settings.status</params>
+                                </step>
+                                <step>
+                                    <type>STR_REPLACE</type>
+                                    <params>OK
+0</params>
+                                </step>
+                                <step>
+                                    <type>STR_REPLACE</type>
+                                    <params>FAILED
+1</params>
+                                </step>
+                            </preprocessing>
+                            <master_item>
+                                <key>barman.check</key>
+                            </master_item>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Barman Backup  {#BARMAN.BACKUP}: Backup Privileges</name>
+                            <type>DEPENDENT</type>
+                            <key>barman.superuser_or_standard_user_with_backup_privileges.[&quot;{#BARMAN.BACKUP}&quot;]</key>
+                            <delay>0</delay>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>PostgreSQL Barman Backup {#BARMAN.BACKUP}</name>
+                                </application_prototype>
+                            </application_prototypes>
+                            <valuemap>
+                                <name>Alarm state</name>
+                            </valuemap>
+                            <preprocessing>
+                                <step>
+                                    <type>JSONPATH</type>
+                                    <params>$.{#BARMAN.BACKUP}.superuser_or_standard_user_with_backup_privileges.status</params>
+                                </step>
+                                <step>
+                                    <type>STR_REPLACE</type>
+                                    <params>OK
+0</params>
+                                </step>
+                                <step>
+                                    <type>STR_REPLACE</type>
+                                    <params>FAILED
+1</params>
+                                </step>
+                            </preprocessing>
+                            <master_item>
+                                <key>barman.check</key>
+                            </master_item>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{last()}=1</expression>
+                                    <name>Barman Backup {#BARMAN.BACKUP}: Backup Prlvileges insufficient</name>
+                                    <priority>INFO</priority>
+                                    <description>Barman user does not have the necessary access rights for this PostgreSQL database.</description>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Barman Backup  {#BARMAN.BACKUP}: System ID Coherence</name>
+                            <type>DEPENDENT</type>
+                            <key>barman.systemid_coherence.[&quot;{#BARMAN.BACKUP}&quot;]</key>
+                            <delay>0</delay>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>PostgreSQL Barman Backup {#BARMAN.BACKUP}</name>
+                                </application_prototype>
+                            </application_prototypes>
+                            <valuemap>
+                                <name>Alarm state</name>
+                            </valuemap>
+                            <preprocessing>
+                                <step>
+                                    <type>JSONPATH</type>
+                                    <params>$.{#BARMAN.BACKUP}.systemid_coherence.status</params>
+                                </step>
+                                <step>
+                                    <type>STR_REPLACE</type>
+                                    <params>OK
+0</params>
+                                </step>
+                                <step>
+                                    <type>STR_REPLACE</type>
+                                    <params>FAILED
+1</params>
+                                </step>
+                            </preprocessing>
+                            <master_item>
+                                <key>barman.check</key>
+                            </master_item>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{last()}=1</expression>
+                                    <name>Barman Backup {#BARMAN.BACKUP}: System ID Coherence error</name>
+                                    <priority>WARNING</priority>
+                                    <description>Check Barman log files for more details.</description>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Barman Backup  {#BARMAN.BACKUP}: WAL Level</name>
+                            <type>DEPENDENT</type>
+                            <key>barman.wal_level.[&quot;{#BARMAN.BACKUP}&quot;]</key>
+                            <delay>0</delay>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>PostgreSQL Barman Backup {#BARMAN.BACKUP}</name>
+                                </application_prototype>
+                            </application_prototypes>
+                            <valuemap>
+                                <name>Alarm state</name>
+                            </valuemap>
+                            <preprocessing>
+                                <step>
+                                    <type>JSONPATH</type>
+                                    <params>$.{#BARMAN.BACKUP}.wal_level.status</params>
+                                </step>
+                                <step>
+                                    <type>STR_REPLACE</type>
+                                    <params>OK
+0</params>
+                                </step>
+                                <step>
+                                    <type>STR_REPLACE</type>
+                                    <params>FAILED
+1</params>
+                                </step>
+                            </preprocessing>
+                            <master_item>
+                                <key>barman.check</key>
+                            </master_item>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{last()}=1</expression>
+                                    <name>Barman Backup {#BARMAN.BACKUP}: WAL Level error</name>
+                                    <priority>WARNING</priority>
+                                    <description>WAL Level is not what it should be, check Barman log files</description>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                    </item_prototypes>
+                    <master_item>
+                        <key>barman.check</key>
+                    </master_item>
+                    <preprocessing>
+                        <step>
+                            <type>JAVASCRIPT</type>
+                            <params>var input = JSON.parse(value)
+var output = []
+for (var key in input) {
+  output.push({&quot;{#BARMAN.BACKUP}&quot;: key})
+}
+//var output = [{&quot;KEY&quot;: &quot;value1&quot;},{&quot;KEY&quot;: &quot;value2&quot;}]
+return JSON.stringify(output)</params>
+                        </step>
+                    </preprocessing>
+                </discovery_rule>
+            </discovery_rules>
+        </template>
+    </templates>
+    <value_maps>
+        <value_map>
+            <name>Alarm state</name>
+            <mappings>
+                <mapping>
+                    <value>0</value>
+                    <newvalue>Ok</newvalue>
+                </mapping>
+                <mapping>
+                    <value>1</value>
+                    <newvalue>Alarm</newvalue>
+                </mapping>
+            </mappings>
+        </value_map>
+    </value_maps>
+</zabbix_export>
+
