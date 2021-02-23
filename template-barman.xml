@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
     <version>5.0</version>
-    <date>2021-02-22T17:40:27Z</date>
+    <date>2021-02-23T09:43:04Z</date>
     <groups>
         <group>
             <name>Templates/Databases</name>
@@ -38,6 +38,14 @@ UserParameter=barman.check,/usr/bin/sudo -u barman /usr/bin/barman -f json check
                             <name>PostgreSQL Barman</name>
                         </application>
                     </applications>
+                    <triggers>
+                        <trigger>
+                            <expression>{nodata(600,strict)}=1</expression>
+                            <name>PostgreSQL Barman gives no data!</name>
+                            <priority>AVERAGE</priority>
+                            <description>Barman Check does not work/gives no data. No monitoring of PostgreSQL backup status possible due to this error.</description>
+                        </trigger>
+                    </triggers>
                 </item>
             </items>
             <discovery_rules>
@@ -82,9 +90,9 @@ UserParameter=barman.check,/usr/bin/sudo -u barman /usr/bin/barman -f json check
                             <trigger_prototypes>
                                 <trigger_prototype>
                                     <expression>{last()}=1</expression>
-                                    <name>Barman Backup {#BARMAN.BACKUP}: Archiver Errors</name>
+                                    <name>Barman Backup {#BARMAN.BACKUP}: Archiver has errors</name>
                                     <priority>WARNING</priority>
-                                    <description>The Barman archiver experienced some errors. Check the barman logfile and the error directory for this archiver and resolve the issue there.</description>
+                                    <description>The Barman archiver experienced some errors. Check the Barman logfile and the error directory for this archiver and resolve the issue there.</description>
                                 </trigger_prototype>
                             </trigger_prototypes>
                         </item_prototype>
@@ -207,7 +215,7 @@ UserParameter=barman.check,/usr/bin/sudo -u barman /usr/bin/barman -f json check
                                     <expression>{last()}=1</expression>
                                     <name>Barman Backup {#BARMAN.BACKUP}: Backup maximum age exceeded</name>
                                     <priority>AVERAGE</priority>
-                                    <description>The youngest barman base backup is older that the configured threshold. This means that there is a problem either with the configuration or the execution of base backups.</description>
+                                    <description>The youngest Barman base backup is older that the configured threshold. This means that there is a problem either with the configuration or the execution of base backups.</description>
                                 </trigger_prototype>
                             </trigger_prototypes>
                         </item_prototype>
@@ -246,7 +254,7 @@ UserParameter=barman.check,/usr/bin/sudo -u barman /usr/bin/barman -f json check
                             <trigger_prototypes>
                                 <trigger_prototype>
                                     <expression>{last()}=1</expression>
-                                    <name>Barman Backup {#BARMAN.BACKUP}: Compression Settings</name>
+                                    <name>Barman Backup {#BARMAN.BACKUP}: Compression settings error</name>
                                     <priority>INFO</priority>
                                     <description>The compression settings for base backups are not ok - verify and check your configuration</description>
                                 </trigger_prototype>
@@ -284,6 +292,14 @@ UserParameter=barman.check,/usr/bin/sudo -u barman /usr/bin/barman -f json check
                             <master_item>
                                 <key>barman.check</key>
                             </master_item>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{last()}=1</expression>
+                                    <name>Barman Backup {#BARMAN.BACKUP}: Continuous archiving failed</name>
+                                    <priority>WARNING</priority>
+                                    <description>Barman continuous archiving failed. Check the Barman logfile and the error directory for this archiver and resolve the issue there.</description>
+                                </trigger_prototype>
+                            </trigger_prototypes>
                         </item_prototype>
                         <item_prototype>
                             <name>Barman Backup  {#BARMAN.BACKUP}: Directories</name>
@@ -322,7 +338,7 @@ UserParameter=barman.check,/usr/bin/sudo -u barman /usr/bin/barman -f json check
                                     <expression>{last()}=1</expression>
                                     <name>Barman Backup {#BARMAN.BACKUP}: Directories misconfigured</name>
                                     <priority>INFO</priority>
-                                    <description>The barman directories are not ok. Check log file, configuration and flie system layout.</description>
+                                    <description>The Barman directories are not ok. Check log file, configuration and file system layout.</description>
                                 </trigger_prototype>
                             </trigger_prototypes>
                         </item_prototype>
@@ -358,6 +374,16 @@ UserParameter=barman.check,/usr/bin/sudo -u barman /usr/bin/barman -f json check
                             <master_item>
                                 <key>barman.check</key>
                             </master_item>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{last()}=1</expression>
+                                    <name>Barman Backup {#BARMAN.BACKUP}: Failed backups</name>
+                                    <priority>WARNING</priority>
+                                    <description>Barman has failed base backups. Check the logfiles and the overall status of barman.&#13;
+&#13;
+A failed backup might not be a big problem, if you have more intact base backups as well as ongoing WAL archiving</description>
+                                </trigger_prototype>
+                            </trigger_prototypes>
                         </item_prototype>
                         <item_prototype>
                             <name>Barman Backup  {#BARMAN.BACKUP}: Minimum Redundancy Requirements</name>
@@ -394,7 +420,7 @@ UserParameter=barman.check,/usr/bin/sudo -u barman /usr/bin/barman -f json check
                             <trigger_prototypes>
                                 <trigger_prototype>
                                     <expression>{last()}=1</expression>
-                                    <name>Barman Backup {#BARMAN.BACKUP}: Minimum Redundancy not fulfilled</name>
+                                    <name>Barman Backup {#BARMAN.BACKUP}: Minimum redundancy not fulfilled</name>
                                     <priority>AVERAGE</priority>
                                     <description>There are less base backups in storage than configured. Check for backup issues and misconfigurations (especially cron jobs for backup creation and retention)</description>
                                 </trigger_prototype>
@@ -435,9 +461,9 @@ UserParameter=barman.check,/usr/bin/sudo -u barman /usr/bin/barman -f json check
                             <trigger_prototypes>
                                 <trigger_prototype>
                                     <expression>{last()}=1</expression>
-                                    <name>Barman Backup {#BARMAN.BACKUP}: pg_basebackup error</name>
+                                    <name>Barman Backup {#BARMAN.BACKUP}: pg_basebackup access failed</name>
                                     <priority>INFO</priority>
-                                    <description>This usually means that barman cannot find pg_basebackup on the PostgreSQL server node, resolve either there or in barman configuration</description>
+                                    <description>This usually means that Barmancannot find pg_basebackup on the PostgreSQL server node, resolve either there or in Barman configuration</description>
                                 </trigger_prototype>
                             </trigger_prototypes>
                         </item_prototype>
@@ -478,7 +504,7 @@ UserParameter=barman.check,/usr/bin/sudo -u barman /usr/bin/barman -f json check
                                     <expression>{last()}=1</expression>
                                     <name>Barman Backup {#BARMAN.BACKUP}: pg_basebackup incompatible</name>
                                     <priority>INFO</priority>
-                                    <description>The version of pg_basebackup on a database server node is not compatible with this barman version</description>
+                                    <description>The version of pg_basebackup on a database server node is not compatible with this Barman version</description>
                                 </trigger_prototype>
                             </trigger_prototypes>
                         </item_prototype>
@@ -517,7 +543,7 @@ UserParameter=barman.check,/usr/bin/sudo -u barman /usr/bin/barman -f json check
                             <trigger_prototypes>
                                 <trigger_prototype>
                                     <expression>{last()}=1</expression>
-                                    <name>Barman Backup {#BARMAN.BACKUP}: tablespace mapping not supported</name>
+                                    <name>Barman Backup {#BARMAN.BACKUP}: Tablespace mapping not supported</name>
                                     <priority>INFO</priority>
                                     <description>pg_basebackup does not support tablespace mapping in the available version, but it should</description>
                                 </trigger_prototype>
@@ -558,9 +584,9 @@ UserParameter=barman.check,/usr/bin/sudo -u barman /usr/bin/barman -f json check
                             <trigger_prototypes>
                                 <trigger_prototype>
                                     <expression>{last()}=1</expression>
-                                    <name>Barman Backup {#BARMAN.BACKUP}: pg_receivexlog error</name>
+                                    <name>Barman Backup {#BARMAN.BACKUP}: pg_receivexlog access failed</name>
                                     <priority>INFO</priority>
-                                    <description>Barman cannot access pg_receivexlog, check its installation and barman configuration</description>
+                                    <description>Barman cannot access pg_receivexlog, check its installation and Barman configuration</description>
                                 </trigger_prototype>
                             </trigger_prototypes>
                         </item_prototype>
@@ -601,7 +627,7 @@ UserParameter=barman.check,/usr/bin/sudo -u barman /usr/bin/barman -f json check
                                     <expression>{last()}=1</expression>
                                     <name>Barman Backup {#BARMAN.BACKUP}: pg_receivexlog incompatible</name>
                                     <priority>INFO</priority>
-                                    <description>pg_receivexlog is not compatible with the used barman version</description>
+                                    <description>pg_receivexlog is not compatible with the used Barman version</description>
                                 </trigger_prototype>
                             </trigger_prototypes>
                         </item_prototype>
@@ -640,9 +666,9 @@ UserParameter=barman.check,/usr/bin/sudo -u barman /usr/bin/barman -f json check
                             <trigger_prototypes>
                                 <trigger_prototype>
                                     <expression>{last()}=1</expression>
-                                    <name>Barman Backup {#BARMAN.BACKUP}: PostgreSQL Error</name>
+                                    <name>Barman Backup {#BARMAN.BACKUP}: PostgreSQL error</name>
                                     <priority>WARNING</priority>
-                                    <description>Barman can not access PostgreSQL correctly. Check if it is running and if barman has the necessary rights to it.</description>
+                                    <description>Barman can not access PostgreSQL correctly. Check if it is running and if Barman has the necessary rights to it.</description>
                                 </trigger_prototype>
                             </trigger_prototypes>
                         </item_prototype>
@@ -681,7 +707,7 @@ UserParameter=barman.check,/usr/bin/sudo -u barman /usr/bin/barman -f json check
                             <trigger_prototypes>
                                 <trigger_prototype>
                                     <expression>{last()}=1</expression>
-                                    <name>Barman Backup {#BARMAN.BACKUP}: PostgreSQL Streaming Error</name>
+                                    <name>Barman Backup {#BARMAN.BACKUP}: PostgreSQL streaming error</name>
                                     <priority>WARNING</priority>
                                     <description>Barman can not stream correctly from PostgreSQL. Check the logfile for more details</description>
                                 </trigger_prototype>
@@ -760,6 +786,14 @@ UserParameter=barman.check,/usr/bin/sudo -u barman /usr/bin/barman -f json check
                             <master_item>
                                 <key>barman.check</key>
                             </master_item>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{last()}=1</expression>
+                                    <name>Barman Backup {#BARMAN.BACKUP}: Replication slot failed</name>
+                                    <priority>WARNING</priority>
+                                    <description>Barmans replication slot is not set up or available in PostgreSQL</description>
+                                </trigger_prototype>
+                            </trigger_prototypes>
                         </item_prototype>
                         <item_prototype>
                             <name>Barman Backup  {#BARMAN.BACKUP}: Retention Policy Settings</name>
@@ -793,6 +827,14 @@ UserParameter=barman.check,/usr/bin/sudo -u barman /usr/bin/barman -f json check
                             <master_item>
                                 <key>barman.check</key>
                             </master_item>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{last()}=1</expression>
+                                    <name>Barman Backup {#BARMAN.BACKUP}: Retention policy error</name>
+                                    <priority>INFO</priority>
+                                    <description>The Barman retention policy settings are incorrect.</description>
+                                </trigger_prototype>
+                            </trigger_prototypes>
                         </item_prototype>
                         <item_prototype>
                             <name>Barman Backup  {#BARMAN.BACKUP}: Backup Privileges</name>
@@ -829,7 +871,7 @@ UserParameter=barman.check,/usr/bin/sudo -u barman /usr/bin/barman -f json check
                             <trigger_prototypes>
                                 <trigger_prototype>
                                     <expression>{last()}=1</expression>
-                                    <name>Barman Backup {#BARMAN.BACKUP}: Backup Prlvileges insufficient</name>
+                                    <name>Barman Backup {#BARMAN.BACKUP}: Backup privileges insufficient</name>
                                     <priority>INFO</priority>
                                     <description>Barman user does not have the necessary access rights for this PostgreSQL database.</description>
                                 </trigger_prototype>
@@ -953,4 +995,3 @@ return JSON.stringify(output)</params>
         </value_map>
     </value_maps>
 </zabbix_export>
-
