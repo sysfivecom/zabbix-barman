@@ -71,7 +71,7 @@ UserParameter=barman.check,/usr/bin/sudo -u barman /usr/bin/barman -f json check
                             <preprocessing>
                                 <step>
                                     <type>JSONPATH</type>
-                                    <params>$.{#BARMAN.BACKUP}.archiver_errors.status</params>
+                                    <params>$.['{#BARMAN.BACKUP}'].archiver_errors.status</params>
                                 </step>
                                 <step>
                                     <type>STR_REPLACE</type>
@@ -112,7 +112,7 @@ UserParameter=barman.check,/usr/bin/sudo -u barman /usr/bin/barman -f json check
                             <preprocessing>
                                 <step>
                                     <type>JSONPATH</type>
-                                    <params>$.{#BARMAN.BACKUP}.archive_command.status</params>
+                                    <params>$.['{#BARMAN.BACKUP}'].archive_command.status</params>
                                 </step>
                                 <step>
                                     <type>STR_REPLACE</type>
@@ -153,7 +153,7 @@ UserParameter=barman.check,/usr/bin/sudo -u barman /usr/bin/barman -f json check
                             <preprocessing>
                                 <step>
                                     <type>JSONPATH</type>
-                                    <params>$.{#BARMAN.BACKUP}.archive_mode.status</params>
+                                    <params>$.['{#BARMAN.BACKUP}'].archive_mode.status</params>
                                 </step>
                                 <step>
                                     <type>STR_REPLACE</type>
@@ -194,7 +194,7 @@ UserParameter=barman.check,/usr/bin/sudo -u barman /usr/bin/barman -f json check
                             <preprocessing>
                                 <step>
                                     <type>JSONPATH</type>
-                                    <params>$.{#BARMAN.BACKUP}.backup_maximum_age.status</params>
+                                    <params>$.['{#BARMAN.BACKUP}'].backup_maximum_age.status</params>
                                 </step>
                                 <step>
                                     <type>STR_REPLACE</type>
@@ -235,7 +235,7 @@ UserParameter=barman.check,/usr/bin/sudo -u barman /usr/bin/barman -f json check
                             <preprocessing>
                                 <step>
                                     <type>JSONPATH</type>
-                                    <params>$.{#BARMAN.BACKUP}.compression_settings.status</params>
+                                    <params>$.['{#BARMAN.BACKUP}'].compression_settings.status</params>
                                 </step>
                                 <step>
                                     <type>STR_REPLACE</type>
@@ -276,7 +276,7 @@ UserParameter=barman.check,/usr/bin/sudo -u barman /usr/bin/barman -f json check
                             <preprocessing>
                                 <step>
                                     <type>JSONPATH</type>
-                                    <params>$.{#BARMAN.BACKUP}.continuous_archiving.status</params>
+                                    <params>$.['{#BARMAN.BACKUP}'].continuous_archiving.status</params>
                                 </step>
                                 <step>
                                     <type>STR_REPLACE</type>
@@ -317,7 +317,7 @@ UserParameter=barman.check,/usr/bin/sudo -u barman /usr/bin/barman -f json check
                             <preprocessing>
                                 <step>
                                     <type>JSONPATH</type>
-                                    <params>$.{#BARMAN.BACKUP}.directories.status</params>
+                                    <params>$.['{#BARMAN.BACKUP}'].directories.status</params>
                                 </step>
                                 <step>
                                     <type>STR_REPLACE</type>
@@ -358,7 +358,7 @@ UserParameter=barman.check,/usr/bin/sudo -u barman /usr/bin/barman -f json check
                             <preprocessing>
                                 <step>
                                     <type>JSONPATH</type>
-                                    <params>$.{#BARMAN.BACKUP}.failed_backups.status</params>
+                                    <params>$.['{#BARMAN.BACKUP}'].failed_backups.status</params>
                                 </step>
                                 <step>
                                     <type>STR_REPLACE</type>
@@ -401,7 +401,7 @@ A failed backup might not be a big problem, if you have more intact base backups
                             <preprocessing>
                                 <step>
                                     <type>JSONPATH</type>
-                                    <params>$.{#BARMAN.BACKUP}.minimum_redundancy_requirements.status</params>
+                                    <params>$.['{#BARMAN.BACKUP}'].minimum_redundancy_requirements.status</params>
                                 </step>
                                 <step>
                                     <type>STR_REPLACE</type>
@@ -442,7 +442,7 @@ A failed backup might not be a big problem, if you have more intact base backups
                             <preprocessing>
                                 <step>
                                     <type>JSONPATH</type>
-                                    <params>$.{#BARMAN.BACKUP}.pg_basebackup.status</params>
+                                    <params>$.['{#BARMAN.BACKUP}'].pg_basebackup.status</params>
                                 </step>
                                 <step>
                                     <type>STR_REPLACE</type>
@@ -483,7 +483,7 @@ A failed backup might not be a big problem, if you have more intact base backups
                             <preprocessing>
                                 <step>
                                     <type>JSONPATH</type>
-                                    <params>$.{#BARMAN.BACKUP}.pg_basebackup_compatible.status</params>
+                                    <params>$.['{#BARMAN.BACKUP}'].pg_basebackup_compatible.status</params>
                                 </step>
                                 <step>
                                     <type>STR_REPLACE</type>
@@ -524,7 +524,7 @@ A failed backup might not be a big problem, if you have more intact base backups
                             <preprocessing>
                                 <step>
                                     <type>JSONPATH</type>
-                                    <params>$.{#BARMAN.BACKUP}.pg_basebackup_supports_tablespaces_mapping.status</params>
+                                    <params>$.['{#BARMAN.BACKUP}'].pg_basebackup_supports_tablespaces_mapping.status</params>
                                 </step>
                                 <step>
                                     <type>STR_REPLACE</type>
@@ -565,7 +565,7 @@ A failed backup might not be a big problem, if you have more intact base backups
                             <preprocessing>
                                 <step>
                                     <type>JSONPATH</type>
-                                    <params>$.{#BARMAN.BACKUP}.pg_receivexlog.status</params>
+                                    <params>$.['{#BARMAN.BACKUP}'].pg_receivexlog.status</params>
                                 </step>
                                 <step>
                                     <type>STR_REPLACE</type>
@@ -606,7 +606,7 @@ A failed backup might not be a big problem, if you have more intact base backups
                             <preprocessing>
                                 <step>
                                     <type>JSONPATH</type>
-                                    <params>$.{#BARMAN.BACKUP}.pg_receivexlog_compatible.status</params>
+                                    <params>$.['{#BARMAN.BACKUP}'].pg_receivexlog_compatible.status</params>
                                 </step>
                                 <step>
                                     <type>STR_REPLACE</type>
@@ -647,7 +647,7 @@ A failed backup might not be a big problem, if you have more intact base backups
                             <preprocessing>
                                 <step>
                                     <type>JSONPATH</type>
-                                    <params>$.{#BARMAN.BACKUP}.postgresql.status</params>
+                                    <params>$.['{#BARMAN.BACKUP}'].postgresql.status</params>
                                 </step>
                                 <step>
                                     <type>STR_REPLACE</type>
@@ -688,7 +688,7 @@ A failed backup might not be a big problem, if you have more intact base backups
                             <preprocessing>
                                 <step>
                                     <type>JSONPATH</type>
-                                    <params>$.{#BARMAN.BACKUP}.postgresql_streaming.status</params>
+                                    <params>$.['{#BARMAN.BACKUP}'].postgresql_streaming.status</params>
                                 </step>
                                 <step>
                                     <type>STR_REPLACE</type>
@@ -729,7 +729,7 @@ A failed backup might not be a big problem, if you have more intact base backups
                             <preprocessing>
                                 <step>
                                     <type>JSONPATH</type>
-                                    <params>$.{#BARMAN.BACKUP}.receive_wal_running.status</params>
+                                    <params>$.['{#BARMAN.BACKUP}'].receive_wal_running.status</params>
                                 </step>
                                 <step>
                                     <type>STR_REPLACE</type>
@@ -770,7 +770,7 @@ A failed backup might not be a big problem, if you have more intact base backups
                             <preprocessing>
                                 <step>
                                     <type>JSONPATH</type>
-                                    <params>$.{#BARMAN.BACKUP}.replication_slot.status</params>
+                                    <params>$.['{#BARMAN.BACKUP}'].replication_slot.status</params>
                                 </step>
                                 <step>
                                     <type>STR_REPLACE</type>
@@ -811,7 +811,7 @@ A failed backup might not be a big problem, if you have more intact base backups
                             <preprocessing>
                                 <step>
                                     <type>JSONPATH</type>
-                                    <params>$.{#BARMAN.BACKUP}.retention_policy_settings.status</params>
+                                    <params>$.['{#BARMAN.BACKUP}'].retention_policy_settings.status</params>
                                 </step>
                                 <step>
                                     <type>STR_REPLACE</type>
@@ -852,7 +852,7 @@ A failed backup might not be a big problem, if you have more intact base backups
                             <preprocessing>
                                 <step>
                                     <type>JSONPATH</type>
-                                    <params>$.{#BARMAN.BACKUP}.superuser_or_standard_user_with_backup_privileges.status</params>
+                                    <params>$.['{#BARMAN.BACKUP}'].superuser_or_standard_user_with_backup_privileges.status</params>
                                 </step>
                                 <step>
                                     <type>STR_REPLACE</type>
@@ -893,7 +893,7 @@ A failed backup might not be a big problem, if you have more intact base backups
                             <preprocessing>
                                 <step>
                                     <type>JSONPATH</type>
-                                    <params>$.{#BARMAN.BACKUP}.systemid_coherence.status</params>
+                                    <params>$.['{#BARMAN.BACKUP}'].systemid_coherence.status</params>
                                 </step>
                                 <step>
                                     <type>STR_REPLACE</type>
@@ -934,7 +934,7 @@ A failed backup might not be a big problem, if you have more intact base backups
                             <preprocessing>
                                 <step>
                                     <type>JSONPATH</type>
-                                    <params>$.{#BARMAN.BACKUP}.wal_level.status</params>
+                                    <params>$.['{#BARMAN.BACKUP}'].wal_level.status</params>
                                 </step>
                                 <step>
                                     <type>STR_REPLACE</type>
